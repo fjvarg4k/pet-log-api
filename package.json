@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server.js",
+    "start": "node ./server.js",
     "test": "mocha --exit"
   },
   "author": "Francisco Vargas",
@@ -12,8 +12,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.6"
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
