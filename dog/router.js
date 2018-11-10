@@ -34,32 +34,6 @@ dogRouter.post('/', jwtPassportMiddleware, (req, res) => {
     });
 });
 
-// Create new instance of dog medication
-dogRouter.post('/:dogid/medication', jwtPassportMiddleware, (req, res) => {
-  const newDogMedication = {
-    name: req.body.name,
-    medicationDays: req.body.medicationDays,
-    medicationTime: req.body.medicationTime,
-    medicationDescription: req.body.medicationDescription
-  };
-
-  const validation = Joi.validate(newDogMedication, DogMedicationJoiSchema);
-  if (validation.error) {
-    return res.status(422).json({ error: validation.error });
-  }
-
-  Dog.findById(req.params.dogid)
-    .then(dog => {
-      dog.medication.push(newDogMedication);
-      dog.save();
-      return res.status(201).json(dog.serialize());
-    })
-    .catch(err => {
-      console.log(err);
-      return res.status(500).json(err);
-    })
-});
-
 // Retrieve a specific user's dogs
 dogRouter.get('/', jwtPassportMiddleware, (req, res) => {
   Dog.find({ user: req.user.id })
@@ -88,19 +62,6 @@ dogRouter.get('/all', (req, res) => {
     })
 });
 
-// Retrieve all medication info of a specific dog
-dogRouter.get('/:dogid/medication/all', (req, res) => {
-  Dog.findById(req.params.dogid)
-    .then(dog => {
-      return res.status(200).json(
-        dog.medication.map(medication => medication)
-      );
-    })
-    .catch(err => {
-      return res.status(500).json(err);
-    })
-});
-
 // Retrieve instance of a dog by id
 dogRouter.get('/:dogid', (req, res) => {
   Dog.findById(req.params.dogid)
@@ -112,17 +73,6 @@ dogRouter.get('/:dogid', (req, res) => {
       return res.status(500).json(err);
     });
 });
-
-// Retrieve instance of a specific dog's medication by id
-dogRouter.get('/:dogid/medication/:medicationid', (req, res) => {
-  Dog.findById(req.params.dogid)
-    .then(dog => {
-      return res.status(200).json(dog.medication.id(req.params.medicationid));
-    })
-    .catch(err => {
-      return res.status(500).json(err);
-    })
-})
 
 // Update dog by id
 dogRouter.put('/:dogid', jwtPassportMiddleware, (req, res) => {
@@ -160,41 +110,6 @@ dogRouter.put('/:dogid', jwtPassportMiddleware, (req, res) => {
     })
 });
 
-// update dog medication by id
-dogRouter.put('/:dogid/medication/:medicationid', jwtPassportMiddleware, (req, res) => {
-  const dogMedicationUpdate = {};
-  const updateableFields = [
-    'name',
-    'medicationDays',
-    'medicationTime',
-    'medicationDescription'
-  ];
-
-  updateableFields.forEach(field => {
-    if (field in req.body) {
-      dogMedicationUpdate[field] = req.body[field];
-    }
-  });
-
-  const validation = Joi.validate(dogMedicationUpdate, DogMedicationJoiSchema);
-  if (validation.error) {
-    return res.status(422).json({ error: validation.error });
-  }
-
-  Dog.findById(req.params.dogid)
-    .then(dog => {
-      dog.medication.update(
-        { _id: req.params.medicationid },
-        { dogMedicationUpdate }
-      );
-      dog.save();
-      return res.status(204).end();
-    })
-    .catch(err => {
-      return res.status(500).json(err);
-    })
-});
-
 // Remove dog by id
 dogRouter.delete('/:dogid', jwtPassportMiddleware, (req, res) => {
   Dog.findByIdAndRemove(req.params.dogid)
@@ -204,19 +119,6 @@ dogRouter.delete('/:dogid', jwtPassportMiddleware, (req, res) => {
     .catch(err => {
       return res.status(500).json(err);
     });
-});
-
-// Remove dog medication for specific dog
-dogRouter.delete('/:dogid/medication/:medicationid', jwtPassportMiddleware, (req, res) => {
-  Dog.findById(req.params.dogid)
-    .then(dog => {
-      dog.medication.id(req.params.medicationid).remove();
-      dog.save();
-      return res.status(204).end();
-    })
-    .catch(err => {
-      return res.status(500).json(err);
-    })
 });
 
 module.exports = { dogRouter };

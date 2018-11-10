@@ -8,7 +8,7 @@ const { PORT, DATABASE_URL, CLIENT_ORIGIN } = require('./config');
 const { userRouter } = require('./user/router');
 const { authRouter } = require('./auth/router');
 const { dogRouter } = require('./dog/router');
-// const { dogMedicationRouter } = require('./dog-medication/router');
+const { dogMedicationRouter } = require('./dog-medication/router');
 const { localStrategy, jwtStrategy } = require('./auth/strategy');
 
 let server;
@@ -17,11 +17,11 @@ const app = express();
 // Middleware
 app.use(morgan('common'));
 app.use(express.json());
-// app.use(
-//   cors({
-//     origin: CLIENT_ORIGIN
-//   })
-// );
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN
+  })
+);
 
 // Used when authenticating user login
 passport.use(localStrategy);
@@ -31,11 +31,7 @@ passport.use(jwtStrategy);
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/dog', dogRouter);
-// app.use('/api/medication', dogMedicationRouter);
-
-// app.get('/api/*', (req, res) => {
-//    res.json({ok: true});
-//  });
+app.use('/api/medication', dogMedicationRouter);
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
