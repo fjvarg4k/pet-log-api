@@ -34,6 +34,11 @@ dogMedicationRouter.post('/:dogid', jwtPassportMiddleware, (req, res) => {
     });
 });
 
+// // Retrieve all dog medication info
+// dogMedicationRouter.get('/all', jwtPassportMiddleware, (req, res) => {
+//   DogMedication.find()
+// });
+
 // Retrieve all medication info of a specific dog
 dogMedicationRouter.get('/:dogid/all', jwtPassportMiddleware, (req, res) => {
   DogMedication.find({dog: req.params.dogid})

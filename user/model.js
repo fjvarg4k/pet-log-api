@@ -34,8 +34,8 @@ userSchema.methods.validatePassword = function(password) {
 const UserJoiSchema = Joi.object().keys({
   firstName: Joi.string().min(1).trim().required(),
   lastName: Joi.string().min(1).trim().required(),
-  username: Joi.string().min(4).trim().required(),
-  password: Joi.string().min(8).max(72).trim().required()
+  username: Joi.string().min(4).max(72).trim().required(),
+  password: Joi.string().min(4).max(72).trim().required()
 });
 
 const User = mongoose.model('user', userSchema);

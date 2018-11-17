@@ -83,9 +83,9 @@ dogRouter.put('/:dogid', jwtPassportMiddleware, (req, res) => {
     'weight',
     'gender',
     'age',
-    'vetInfo.vetName',
-    'vetInfo.vetLocationName',
-    'vetInfo.address'
+    'vetInfo',
+    // 'vetInfo.vetLocationName',
+    // 'vetInfo.address'
   ];
 
   updateableFields.forEach(field => {
